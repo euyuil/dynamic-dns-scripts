@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Script to update IP of domain through freedns.afraid.org.
+
+identifier=dyndns-lynb.us.to
+
+file_result="/tmp/$identifier-result"
+file_ip_cache="/tmp/$identifier-ipcache"
+file_log="/var/log/$identifier.log"
+
+hash_code="Your Hash Code"
+ip_address=`/usr/local/sbin/ipaddr-internet`
+echo "Current IP: $ip_address."
+ip_cache=`cat $file_ip_cache`
+echo "Previous IP: $ip_cache."
+
+if [ "$ip_address" != "$ip_cache" ]; then
+
+echo "Changing IP to $ip_address..."
+
+wget -q -O $file_result \
+http://freedns.afraid.org/dynamic/update.php?$hash_code=&address=$ip_address
+
+echo "Changed IP to $ip_address."
+
+echo $ip_address > $file_ip_cache
+
+current="[`date`] "
+content=`cat $file_result`
+logline="$current$content"
+
+echo $logline >> $file_log
+
+fi
+

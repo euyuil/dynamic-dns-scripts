@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Get Internet IP address.
+
+identifier=ipaddr-internet
+
+file_ip_address="/tmp/$identifier-ipcache"
+ip_echo_service=http://ipecho.net/plain
+
+wget -q -O $file_ip_address $ip_echo_service
+
+cat $file_ip_address
+

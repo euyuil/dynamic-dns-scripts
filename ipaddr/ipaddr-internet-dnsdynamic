@@ -1,0 +1,6 @@
+#!/bin/sh
+
+wget -q -O /tmp/ipaddr-internet http://myip.dnsdynamic.org/
+
+cat /tmp/ipaddr-internet
+

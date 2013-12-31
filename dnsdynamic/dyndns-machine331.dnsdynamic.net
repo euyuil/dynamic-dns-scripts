@@ -1,0 +1,30 @@
+#!/bin/sh
+
+username='admin@codemock.com'
+password='YourPasswordGoesHere'
+hostname='machine331.dnsdynamic.net'
+
+ipaddr=`/usr/local/sbin/ipaddr-internet`
+echo "Current IP: $ipaddr."
+
+ipcache=`cat /tmp/dyndns-ipcache-$hostname`
+echo "Cached IP: $ipcache."
+
+if [ "$ipaddr" != "$ipcache" ]; then
+
+echo "Changing IP of $hostname to $ipaddr..."
+
+wget -q \
+	-O /tmp/dyndns-result-$hostname \
+	--http-user=$username \
+	--http-password=$password \
+	https://www.dnsdynamic.org/api/?hostname=$hostname&myip=$ipaddr
+
+echo "IP of $hostname was changed."
+
+echo $ipaddr > /tmp/dyndns-ipcache-$hostname
+
+echo "[`date`] IP address changed to $ipaddr." >> /var/log/dyndns-$hostname
+
+fi
+
